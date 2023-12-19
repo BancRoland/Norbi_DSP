@@ -12,24 +12,18 @@ def LPF(v,a):
     return out
 
 
-# parser = argparse.ArgumentParser()
-# # parser.add_argument("file", help="file to read")
-# parser.add_argument("-f","--file", help="file to read from", nargs='?', type=str, required=True)
-# args = parser.parse_args()
-
-
-# Specify the path to your WAV file
-# file_path = 'path/to/your/file.wav'
-
 samplerate, data = wavfile.read("dcf77_hole_minute.wav")
 
-# plt.plot(data)
-# plt.show()
-
-# plt.plot(np.abs(np.fft.fft(data)))
-# plt.show()
+plt.plot(data)
+plt.title("raw data")
+plt.show()
 
 f=74469
+
+plt.plot(np.abs(np.fft.fft(data)))
+plt.title("Absolute spectrum")
+plt.axvline(f)
+plt.show()
 
 mix=np.exp(1j*2*np.pi*f*np.arange(len(data))/len(data))
 
@@ -50,6 +44,7 @@ plt.plot(np.abs(data3),color="gray",alpha=0.5,label="abs")
 plt.plot(-np.abs(data3),color="gray",alpha=0.5)
 plt.grid()
 plt.legend()
+plt.title("data3")
 plt.show()
 
 plt.plot(np.angle(data3),label="phase")
