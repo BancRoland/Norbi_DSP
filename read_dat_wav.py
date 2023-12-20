@@ -26,8 +26,9 @@ plt.title(f"pCode, len={len(pCode2)}")
 plt.show()
 
 # samplerate, data = wavfile.read("dcf77_hole_minute.wav")
-# samplerate, data = wavfile.read("websdr_recording_start_2023-12-19T13_16_54Z_77.5kHz.wav")
-samplerate, data = wavfile.read("websdr_recording_start_2023-12-19T15_44_14Z_75.0kHz.wav")
+samplerate, data = wavfile.read("start_2023-12-19T18_16_50Z_75.0kHz.wav")
+# samplerate, data = wavfile.read("websdr_recording_start_2023-12-20T08_30_58Z_75.0kHz.wav")
+# samplerate, data = wavfile.read("websdr_recording_start_2023-12-20T08_53_38Z_75.0kHz.wav")
 
 
 print(len(data)/77500)
@@ -37,7 +38,10 @@ plt.title("raw data")
 plt.show()
 
 # f=74469
-f=9517
+# f=9517
+f=257287
+#f=162430
+#f=395923
 
 dataS=np.fft.fft(data)
 
@@ -61,17 +65,9 @@ data0=np.fft.ifft(dataS0)
 
 mix=np.exp(-1j*2*np.pi*f*np.arange(len(data))/len(data))
 
-# plt.plot(np.real(mix))
-# plt.plot(np.imag(mix))
-# plt.plot(np.abs(mix),color="gray",alpha=0.5)
-# plt.plot(-np.abs(mix),color="gray",alpha=0.5)
-# plt.show()
 
 data3=data*mix
 data30=data0*mix
-# a=5e-2
-# data3=LPF(data2,a)
-# data3=LPF(data3,a)
 
 dataS=np.fft.fft(data3)
 plt.plot(np.log10(np.abs(dataS)))
@@ -114,17 +110,17 @@ plt.title("end")
 plt.show()
 
 
-
-
-# plt.plot(np.angle(data3),label="phase")
-# plt.grid()
-# plt.legend()
-# plt.show()
-
-# data4=data3[:-1:]*np.conj(data3[1::])
-
-# plt.plot(np.real(data4))
-# plt.plot(np.imag(data4))
-# plt.plot(np.abs(data4),color="gray",alpha=0.5)
-# plt.plot(-np.abs(data4),color="gray",alpha=0.5)
-# plt.show()
+binary = [0]*len(end)
+for i in range(0,len(end)-1):
+    if(end[i]>7e8):
+        binary[i]=1
+    elif(end[i]<-7e8):
+        binary[i]=-1
+    else:
+        binary[i]=0
+        
+plt.plot(binary)
+plt.grid()
+plt.legend()
+plt.title("binary")
+plt.show()
