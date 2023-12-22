@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from scipy.io import wavfile
 import numpy as np
 
+
 # file from http://websdr.ewi.utwente.nl:8901/ 
 # 75-80 kHz 75 kHz fc CW demod
 
@@ -30,6 +31,30 @@ def resamp(v):
         out[i*22:(i+1)*22]=-1*(2*v[i]-1)*np.ones(22)
     return out
 
+def date(start,minute):
+    year = minute[start+50]*1+minute[start+51]*2+minute[start+52]*4+minute[start+53]*8+minute[start+54]*10+minute[start+55]*20+minute[start+56]*40+minute[start+57]*80
+    month = minute[start+45]*1+minute[start+46]*2+minute[start+47]*4+minute[start+48]*8+minute[start+49]*10
+    day = minute[start+36]*1+minute[start+37]*2+minute[start+38]*4+minute[start+39]*8+minute[start+40]*10+minute[start+41]*20
+    day_of_week_number = minute[start+42]*1+minute[start+43]*2+minute[start+44]*4
+    if(day_of_week_number == 1):
+        day_of_week = 'Monday'
+    elif(day_of_week_number == 2):
+        day_of_week = 'Tuesday'
+    elif(day_of_week_number == 3):
+        day_of_week = 'Wednesday'
+    elif(day_of_week_number == 4):
+        day_of_week = 'Thursday'
+    elif(day_of_week_number == 5):
+        day_of_week = 'Friday'
+    elif(day_of_week_number == 6):
+        day_of_week = 'Saturday'
+    elif(day_of_week_number == 7):
+        day_of_week = 'Sunday'
+    hour = minute[start+29]*1+minute[start+30]*2+minute[start+31]*4+minute[start+32]*8+minute[start+33]*10+minute[start+34]*20
+    minute = minute[start+21]*1+minute[start+22]*2+minute[start+23]*4+minute[start+24]*8+minute[start+25]*10+minute[start+26]*20+minute[start+27]*40
+    full = 'The date and time is ' + str(20) + str(year) + '.' + str(month) + '.' + str(day) + '., ' + day_of_week + ', ' + str(hour) + ':' + str(minute)
+    return full
+
 pCode=[0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,1,0,0,1,1,1,0,0,1,0,1,0,1,0,1,1,0,0,0,0,1,1,0,1,1,1,1,0,1,0,0,1,1,0,1,1,1,0,0,1,0,0,0,1,0,1,0,0,0,0,1,0,1,0,1,1,0,1,0,0,1,1,1,1,1,1,0,1,1,0,0,1,0,0,1,0,0,1,0,1,1,0,1,1,1,1,1,1,0,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,1,1,0,0,1,0,1,0,0,0,1,1,0,1,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,1,0,0,0,1,1,1,0,1,0,1,1,0,0,1,0,1,1,0,0,1,1,1,1,0,0,0,1,1,1,1,1,0,1,1,1,0,1,0,0,0,0,0,1,1,0,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,1,0,1,0,1,1,1,1,0,0,1,0,1,1,1,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,1,0,0,1,0,0,1,1,1,1,0,1,0,1,1,1,0,1,0,1,0,0,0,1,0,0,1,0,0,0,0,1,1,0,0,1,1,1,0,0,0,0,1,0,1,1,1,1,0,1,1,0,1,1,0,0,1,1,0,1,0,0,0,0,1,1,1,0,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,0,0,0,1,0,1,1,1,0,0,1,1,0,0,1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,1,1,0,1,1,0,1,0,0,0,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,0,1,1,0,0,0,1,0,1,0,1,0,0,1,0,0,0,1,1,1,0,0,0,1,1,0,1,1,0,1,0,1,0,1,1,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1]
 
 pCode2=resamp(pCode)
@@ -43,7 +68,7 @@ if PLOTCODE:
 samplerate, data = wavfile.read("start_2023-12-19T18_16_50Z_75.0kHz.wav")
 # samplerate, data = wavfile.read("websdr_recording_start_2023-12-20T08_30_58Z_75.0kHz.wav")
 # samplerate, data = wavfile.read("websdr_recording_start_2023-12-20T08_53_38Z_75.0kHz.wav")
-
+# samplerate, data = wavfile.read("websdr_recording_start_2023-12-20T22_36_42Z_75.4kHz.wav")
 
 print(len(data))
 print(len(data)/fs)
@@ -55,11 +80,21 @@ if PLOTRAW:
 
 # f=74469
 # f=9517
-f=257287
+#f=257287
 #f=162430
 #f=395923
+f=0
+power = 0
 
 dataS=np.fft.fft(data)
+
+spectrum = 20*np.log10(np.abs(dataS))
+
+for i in range(0,len(spectrum)-1):
+    if (spectrum[i]>power):
+        power = spectrum[i]
+        f = i
+print('f=' + str(f))
 
 plt.plot(20*np.log10(np.abs(dataS)))
 plt.axvline(f,linestyle="--",alpha=0.5,color="C1")
@@ -137,9 +172,9 @@ plt.show()
 
 binary = [0]*len(end)
 for i in range(0,len(end)-1):
-    if(end[i]>7e8):
+    if(end[i]>1e9):
         binary[i]=1
-    elif(end[i]<-7e8):
+    elif(end[i]<-1e9):
         binary[i]=-1
     else:
         binary[i]=0
@@ -149,3 +184,35 @@ plt.grid()
 plt.legend()
 plt.title("binary")
 plt.show()
+
+minute = []
+j = 0
+for i in range (0,len(binary)-1):
+    if(binary[i]==0 and binary[i-1]==1):
+        minute.append(1)
+        j+=1
+    if(binary[i]==0 and binary[i-1]==-1):
+        minute.append(0)
+        j+=1
+print(minute)
+print(len(minute))
+
+minbits=[]
+hourbits=[]
+dombits=[]
+dowbits=[]
+monthbits=[]
+yearbits=[]
+
+j = 0
+start_i = 0
+for i in range(0,len(minute)-1):
+    if(minute[i] == 1):
+        j+=1
+    if(minute[i] == 0):
+        j=0
+    if(j == 10):
+        start_i = i-9
+        break
+print('Starting bit is ' + str(start_i))
+print(date(start_i,minute))
